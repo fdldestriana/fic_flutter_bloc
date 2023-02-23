@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 
-class Counter extends Cubit<int> {
-  Counter(super.initialState);
+class CounterCubit extends Cubit<int> {
+  CounterCubit(super.initialState);
 
   int get initialData => state;
 

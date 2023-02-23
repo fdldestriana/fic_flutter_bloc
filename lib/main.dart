@@ -1,4 +1,6 @@
-import 'package:fic_flutter_bloc/bloc/cubit/counter.dart';
+import 'package:fic_flutter_bloc/bloc/bloc/counter_bloc.dart';
+import 'package:fic_flutter_bloc/bloc/bloc/counter_event.dart';
+import 'package:fic_flutter_bloc/bloc/cubit/counter_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,26 +10,27 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BlocProvider(
+      create: (BuildContext context) => CounterBloc(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(title: 'Flutter Bloc'),
       ),
-      home: MyHomePage(title: 'Flutter Bloc'),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 
-  final Counter counter = Counter(0);
+  // final Counter counter = Counter(0);
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +38,8 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: BlocConsumer<Counter, int>(
-        bloc: counter,
+      body: BlocConsumer<CounterBloc, int>(
+        // bloc: counter,
         builder: (context, state) {
           return Center(
             child: Column(
@@ -61,12 +64,27 @@ class MyHomePage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          counter.incrementInteger();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              BlocProvider.of<CounterBloc>(context).add(DecrementEvent());
+              // context.read<Counter>().incrementInteger();
+              // counter.incrementInteger();
+            },
+            tooltip: 'Decrement',
+            child: const Icon(Icons.remove),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              context.read<CounterBloc>().add(IncrementEvent());
+              // counter.incrementInteger();
+            },
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
